@@ -29,6 +29,26 @@ app.get('/', (req, res) => {
     });
     res.json(newUser);
   });
+
+
+  // Get a single user by ID
+app.get('/users/:id', async (req, res) => {
+    const { id } = req.params;
+  
+    try {
+      const user = await prisma.users.findUnique({
+        where: { id },  // or { email } if searching by email
+      });
+  
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ error: 'Error retrieving user' });
+    }
+  });
   
 
   app.listen(5000, () => {
